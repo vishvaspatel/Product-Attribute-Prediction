@@ -1,126 +1,187 @@
+# 🛍️ E-Commerce Product Attribute Prediction from Images
+### Meesho Data Challenge 2024 — Team Neural Ninjas
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.4.1-EE4C2C.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
+---
 
-## Getting Started
+## 📘 Project Overview
 
-## Environment Setup
+This project was developed for the **Meesho Data Challenge 2024**, focusing on predicting **fine-grained product attributes** (e.g., color, pattern, style) directly from e-commerce product images.  
+Our final solution achieved a **0.802 private leaderboard score** using a **dual-backbone deep-learning ensemble** combining **CLIP ViT-H/14** and **ConvNext-XXLarge**, with **category-aware MLP classifiers** for robust, multi-attribute prediction.
 
-- Install Python 3.10+ and set up a virtual environment
-- Install PyTorch with CUDA support:
+The system is optimized for both **accuracy and inference efficiency**, capable of classifying an image in **0.05 seconds on an NVIDIA T4 GPU**.
+
+---
+
+## 🚀 Getting Started
+
+### 1️⃣ Environment Setup
+
+- Install Python **3.10+** and set up a virtual environment.
+- Install **PyTorch with CUDA** (if available):
   ```bash
   pip install torch==2.4.1 torchvision==0.19.1 --index-url https://download.pytorch.org/whl/cu121
   ```
-- Ensure you have a CUDA-capable GPU (minimum 8GB VRAM)
-- Install all dependencies: `pip install -r requirements.txt`
+- Ensure you have a CUDA-capable GPU (**minimum 8GB VRAM**).
+- Install all dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
 
-### Configuration
+---
 
-Before running any scripts, configure the training parameters in `config.yaml`
+### ⚙️ Configuration
 
-### Training
+Before running any scripts, configure your training parameters in:
+```bash
+config.yaml
+```
 
-#### Option 1: Training with Validation
+---
 
-This approach is recommended during the development phase:
+## 🧠 Training
 
+### Option 1: Training with Validation
+Recommended during development:
 ```bash
 python train_with_val.py
 ```
-
 This will:
+- Split the dataset into **90% training** and **10% validation**
+- Display validation metrics after each epoch
 
-- Split the data into 90% training and 10% validation
-- Provide validation metrics after each epoch
-
-#### Option 2: Full Dataset Training
-
-Use this for final model training:
-
+### Option 2: Full Dataset Training
+For final model training:
 ```bash
 python main.py
 ```
-
 This will:
+- Train on the complete dataset  
+- Save model checkpoints periodically  
+- Generate training metrics and logs  
 
-- Train on the complete dataset
-- Save model checkpoints periodically
-- Generate training metrics
+---
 
-### Inference
+## 🔍 Inference
 
-#### Load Model Checkpoint
+### Load Model Checkpoints
 
-Download the pre-trained model :
-[ViT-H14-quickgelu Checkpoint File]
-[convnext-xxlarge Checkpoint File]
+Download the pre-trained models before inference:
+- [ViT-H14-quickgelu Checkpoint File]()
+- [ConvNext-XXLarge Checkpoint File]()
 
-#### To run inference on test data:
-
+### Run Inference
 ```bash
 python inference.py \
     --input_csv /path/to/input.csv \
     --image_dir /path/to/images \
-    --model_path_convnext /path/to/convnext_model \
-    --model_path_gelu /path/to/gelu_model \
+    --model_path_convnext /path/to/convnext_model.pth \
+    --model_path_gelu /path/to/gelu_model.pth \
     --output_csv output.csv \
     --batch_size 32 \
     --cache_dir /path/to/cache
 ```
 
 #### Inference Parameters
+| Parameter | Description |
+|------------|-------------|
+| `--input_csv` | Path to the input test CSV file |
+| `--image_dir` | Directory containing test images |
+| `--model_path_convnext` | Path to the trained ConvNext-XXLarge `.pth` file |
+| `--model_path_gelu` | Path to the trained ViT-H14-quickgelu `.pth` file |
+| `--output_csv` | Path for saving predictions |
+| `--batch_size` | Number of images to process in one batch (default: 32) |
+| `--cache_dir` | Directory for temporary cache files |
 
-- `input_csv`: Path to the test data CSV file
-- `image_dir`: Directory containing test images
-- `model_path_convnext`: Path to the trained OpenClip convnext-xxlarge model `.pth` file
-- `model_path_gelu`: Path to the trained OpenClip ViT-H14-quickgelu model `.pth` file
-- `output_csv`: Path for saving predictions
-- `batch_size`: Number of images to process simultaneously
-- `cache_dir`: Directory for storing temporary files
+---
 
+## 🏠 Model Architecture
 
+### Training Pipeline
+<img src="assets/training_pipeline.jpg" alt="Training Pipeline">
 
-## Model Architecture
-
-<img src="assets/training_pipeline.jpg" alt="Training Pipeline" >
+### Inference Pipeline
 <div style="display: flex; align-items: flex-start;">
   <img src="assets/inference_pipeline.jpg" alt="Inference Pipeline" width="400" style="margin-right: 15px;">
   <p>
-    Our final model is a weighted ensemble of two cutting-edge architectures: ViT-H/14-quickgelu and
-    ConvNext-XXLarge. The predictions from these models were combined using a weighted averaging
-    mechanism to optimize overall performance. Details of architecture can be viewed from the table below.
+    Our final model is a <b>weighted ensemble</b> of two architectures — <b>ViT-H/14-quickgelu</b> and <b>ConvNext-XXLarge</b>. Predictions from both networks are combined using weighted averaging to optimize overall performance.
   </p>
 </div>
 
+---
 
+## 🌟 Key Features
 
-## Key Features
+| Model | Description | Strengths |
+|--------|--------------|------------|
+| **ViT-H/14-quickgelu** | Transformer-based model optimized for fine-grained feature extraction, capturing intricate visual patterns. | Ideal for detailed attribute recognition tasks. |
+| **ConvNext-XXLarge** | Convolutional model known for its robust classification power and efficiency on large datasets. | Handles diverse product categories effectively. |
 
-| Model Architecture           | Description                                                                                                                        | Strengths                                               |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| **ViT-H/14-quickgelu** | A transformer-based model optimized for fine-grained feature extraction, excelling at capturing intricate patterns in visual data. | Ideal for attribute recognition tasks.                  |
-| **ConvNext-XXLarge**   | A convolutional model known for its strong classification power, performing well on datasets with complex class distributions.     | Robust classification capabilities in diverse datasets. |
+---
 
-## Results
+## 📊 Results
 
-Please refer to the table below for the leaderboard results.
+### Leaderboard Comparison
 
-## Model Performance Comparison
+| **Approach Type** | **Model & Technique** | **Public Score** | **Private Score** |
+|--------------------|-----------------------|------------------|-------------------|
+| **VQA using VLM** | Finetuned Qwen2VL-7B (instruct model using VQA) | 0.551 | 0.583 |
+| **Image Similarity (Majority Voting)** | Hashing | 0.337 | 0.342 |
+|  | SeResNext + FAISS | 0.670 | 0.669 |
+|  | Swin Transformer + FAISS | 0.606 | 0.605 |
+|  | Frozen CLIP ViT B/32 | 0.723 | 0.724 |
+|  | Frozen CLIP ViT L/14 | 0.777 | 0.778 |
+| **Classification (MLP Head)** | CLIP ViT-B/32 | 0.765 | 0.765 |
+|  | CLIP ViT-L/14 | 0.770 | 0.771 |
+|  | CLIP ViT-L/14 (optimized) | 0.785 | 0.785 |
+|  | CLIP ViT-L/14 (with background removal) | 0.782 | 0.779 |
+|  | CoCa | 0.797 | 0.794 |
+|  | ConvNext-XXLarge | 0.801 | 0.799 |
+|  | ViT-H/14-quickgelu | **0.806** | **0.800** |
+| **Ensemble (Final)** | ConvNext-XXLarge + ViT-H/14-quickgelu | 🏆 **0.807** | 🏆 **0.802** |
 
-| **Approach Type**                                      | **Model & Technique**                     | **Public Score** | **Private Score** |
-| ------------------------------------------------------------ | ----------------------------------------------- | ---------------------- | ----------------------- |
-| **VQA using VLM**                                      | Finetuned Qwen2VL-7B (instruct model using VQA) | 0.551                  | 0.583                   |
-| **Image Similarity Based Search with Majority Voting** | Hashing                                         | 0.337                  | 0.342                   |
-|                                                              | SeResNext model and Faiss                       | 0.670                  | 0.669                   |
-|                                                              | Swin Transformer and Faiss                      | 0.606                  | 0.605                   |
-|                                                              | Frozen ClipViT B/32                             | 0.723                  | 0.724                   |
-|                                                              | Frozen ClipViT L/14                             | 0.777                  | 0.778                   |
-| **Classification Based w/ MLP Head**                   | ClipViT-B/32                                    | 0.765                  | 0.765                   |
-|                                                              | ClipViT-L/14                                    | 0.770                  | 0.771                   |
-|                                                              | ClipViT-L/14 optimal params                     | 0.785                  | 0.785                   |
-|                                                              | ClipViT-L/14 w/background removal               | 0.782                  | 0.779                   |
-|                                                              | Coca                                            | 0.797                  | 0.794                   |
-|                                                              | ConvNext-XXLarge                                | 0.801                  | 0.799                   |
-|                                                              | ViT-H/14-quickgelu                              | **0.806**        | **0.800**         |
-| **Ensemble Based**                                     | ViT-H/14-quickgelu + Coca                       | 0.804                  | 0.801                   |
-|                                                              | ConvNext-XXLarge + ViT-H/14-quickgelu           | **0.807**        | **0.802**         |
+---
 
+## 🧩 Highlights
 
+- **Dual-backbone ensemble** integrating CLIP ViT-H/14 and ConvNext-XXLarge  
+- **Category-aware MLP heads** enabling precise multi-attribute classification  
+- **Layer normalization and dropout** for improved regularization and generalization  
+- **Mixed-precision training** and LR scheduling for stable optimization  
+- **0.05s inference per image** on NVIDIA T4 GPU  
+
+---
+
+## 🧮 Technologies Used
+
+- **Frameworks:** PyTorch, OpenCLIP  
+- **Models:** CLIP ViT-H/14, ConvNext-XXLarge  
+- **Techniques:** Ensemble Learning, Multi-Attribute Classification, MLP, Layer Normalization, Dropout  
+- **Environment:** CUDA 12.1, Python 3.10+
+
+---
+
+## 👥 Team Neural Ninjas
+
+| Name | Email |
+|------|--------|
+| Kushal Agrawal | kushal12345kushal@gmail.com |
+| Nachiketa Purohit | nachiketapuro@gmail.com |
+| Alli Khadga Jyoth | khadgajyothalli@gmail.com |
+| Ritu Singh | ritutweets46@gmail.com |
+
+---
+
+## 📄 License
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## 💡 Acknowledgements
+
+Special thanks to **Meesho AI Team** for organizing the challenge and to **OpenCLIP** & **LAION** communities for their open-source contributions.  
+
+📑 For the complete technical report:  
+[Meesho Data Challenge 2024 — Neural Ninjas (PDF)](./Meesho_Data_Challenge_2024_NeuralNinjas.pdf)
