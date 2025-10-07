@@ -64,39 +64,6 @@ This will:
 
 ---
 
-## 🔍 Inference
-
-### Load Model Checkpoints
-
-Download the pre-trained models before inference:
-- [ViT-H14-quickgelu Checkpoint File]()
-- [ConvNext-XXLarge Checkpoint File]()
-
-### Run Inference
-```bash
-python inference.py \
-    --input_csv /path/to/input.csv \
-    --image_dir /path/to/images \
-    --model_path_convnext /path/to/convnext_model.pth \
-    --model_path_gelu /path/to/gelu_model.pth \
-    --output_csv output.csv \
-    --batch_size 32 \
-    --cache_dir /path/to/cache
-```
-
-#### Inference Parameters
-| Parameter | Description |
-|------------|-------------|
-| `--input_csv` | Path to the input test CSV file |
-| `--image_dir` | Directory containing test images |
-| `--model_path_convnext` | Path to the trained ConvNext-XXLarge `.pth` file |
-| `--model_path_gelu` | Path to the trained ViT-H14-quickgelu `.pth` file |
-| `--output_csv` | Path for saving predictions |
-| `--batch_size` | Number of images to process in one batch (default: 32) |
-| `--cache_dir` | Directory for temporary cache files |
-
----
-
 ## 🏠 Model Architecture
 
 ### Training Pipeline
@@ -162,26 +129,3 @@ python inference.py \
 - **Environment:** CUDA 12.1, Python 3.10+
 
 ---
-
-## 👥 Team Neural Ninjas
-
-| Name | Email |
-|------|--------|
-| Kushal Agrawal | kushal12345kushal@gmail.com |
-| Nachiketa Purohit | nachiketapuro@gmail.com |
-| Alli Khadga Jyoth | khadgajyothalli@gmail.com |
-| Ritu Singh | ritutweets46@gmail.com |
-
----
-
-## 📄 License
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 💡 Acknowledgements
-
-Special thanks to **Meesho AI Team** for organizing the challenge and to **OpenCLIP** & **LAION** communities for their open-source contributions.  
-
-📑 For the complete technical report:  
-[Meesho Data Challenge 2024 — Neural Ninjas (PDF)](./Meesho_Data_Challenge_2024_NeuralNinjas.pdf)
